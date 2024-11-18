@@ -4,10 +4,21 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private NetworkManager networkManager;
     [SerializeField] private GameObject playerPrefab;
-    [SerializeField] private bool isServer = false;
+    private bool isServer = false;
 
     void Start()
     {
+        // 커맨드 라인 인자를 확인하여 서버/클라이언트 구분
+        string[] args = System.Environment.GetCommandLineArgs();
+        foreach (string arg in args)
+        {
+            if (arg == "-server")
+            {
+                isServer = true;
+                break;
+            }
+        }
+
         if (networkManager == null)
             networkManager = FindObjectOfType<NetworkManager>();
 
@@ -21,8 +32,6 @@ public class GameManager : MonoBehaviour
             {
                 networkManager.StartClient();
             }
-
-            // 로컬 플레이어 생성
             SpawnLocalPlayer();
         }
         else
@@ -35,6 +44,6 @@ public class GameManager : MonoBehaviour
     {
         Vector3 randomPosition = new Vector3(Random.Range(-5f, 5f), Random.Range(-5f, 5f), 0);
         GameObject player = Instantiate(playerPrefab, randomPosition, Quaternion.identity);
-        player.AddComponent<PlayerController>();
+        PlayerController controller = player.AddComponent<PlayerController>();
     }
 }

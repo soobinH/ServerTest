@@ -234,9 +234,22 @@ public class NetworkManager : MonoBehaviour
 
     private void CreateNetworkPlayer(PlayerState state)
     {
-        // 여기서는 기본 큐브를 생성하지만, 실제 게임에서는 플레이어 프리팹을 사용해야 합니다
+        // 이미 존재하는 플레이어인지 확인
+        GameObject existingPlayer = GameObject.Find(state.playerId);
+        if (existingPlayer != null)
+        {
+            return;
+        }
+
+        // 네트워크 플레이어용 큐브 생성
         GameObject player = GameObject.CreatePrimitive(PrimitiveType.Cube);
         player.name = state.playerId;
+
+        // 로컬 플레이어와 구분하기 위해 다른 색상 지정
+        Material material = new Material(Shader.Find("Standard"));
+        material.color = Color.red;
+        player.GetComponent<Renderer>().material = material;
+
         player.transform.position = new Vector3(state.posX, state.posY, 0);
     }
 

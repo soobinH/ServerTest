@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         InitializeNetworking();
+        GetComponent<Renderer>().material.color = Color.white;
     }
 
     private void InitializeNetworking()
